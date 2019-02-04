@@ -1,5 +1,6 @@
 {
     "name": "emiliojva/package-patterns",
+    "version": "0.0.1",
     "description": "Conjunto de Pacotes com abstrações ensinadas nos Cursos da SON",
     "homepage": "http://emilio.familiavieira.com",
     "authors": [
