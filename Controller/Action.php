@@ -16,24 +16,50 @@ abstract class Action
     protected $parseToVar = true;
     protected $urlAction;
 
+
+    private $layout_name;
+    private $layout_url;
+
     public function __construct()
     {
         $this->view = new \stdClass();
     }
 
+    public function getLayoutUrl()
+    {
+        $this->layout_url = "../App/Views/Layouts/{$this->getLayout()}.phtml";
+
+        return $this->layout_url;
+    }
+
+    public function setLayout($layout_name)
+    {
+        $this->layout_name = $layout_name;
+    }
+
+    public function getLayout()
+    {
+
+        if (is_null($this->layout_name)) {
+            $this->layout_name = 'default';
+        }
+        return $this->layout_name;
+    }
+
+
     // Renderiza conteudo para com layout ou sem.
-    public function render($action, $layout = true, $parser_template = true)
+    public function render($action, $layout = true, $parser_layout = true)
     {
         $this->action = $action;
-        $this->parseToVar = $parser_template;
+        $this->parseToVar = $parser_layout;
 
         // arquivo layout incluir o metodo $this->content() de forma encadeada
-        if ($layout == true && file_exists("../App/Views/layout.phtml")) {
+        if ($layout == true && file_exists($this->getLayoutUrl())) {
 
             if ($this->parseToVar == true) {
-                return $this->includeToVar('../App/Views/layout.phtml');
+                return $this->includeToVar($this->getLayoutUrl());
             } else {
-                include_once "../App/Views/layout.phtml";
+                include_once $this->getLayoutUrl();
             }
 
         } else {
@@ -56,7 +82,7 @@ abstract class Action
         // limpando namespace e deixando a classe somente
         $singleClassName = strtolower((str_replace("Controller", "", str_replace("App\\Controllers\\", "", $current))));
 
-        $this->urlAction = getcwd()."/../App/Views/" . $singleClassName . "/" . $this->action . ".phtml";
+        $this->urlAction = getcwd() . "/../App/Views/" . $singleClassName . "/" . $this->action . ".phtml";
 
         if ($this->parseToVar == true) {
             return $this->includeToVar($this->urlAction);
