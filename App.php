@@ -24,6 +24,9 @@ class App
     {
         $path = $this->getUri();
         $method = !empty($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+
+        $path= preg_replace('/^(\/public)/','',$path);
+
         $this->router = new Router($path, $method);
     }
 
@@ -52,9 +55,14 @@ class App
     public function run()
     {
         $route = $this->router->run(); // retorna um array com uma closure(function) da rota e seus parametros
+
+
         $method = $route['callback']; // closure
         $params = $route['params']; // params da closure
         $data = null;
+
+
+
 
         // Resolve um metodo, e seus parametros.
         $resolver = new Resolver;
