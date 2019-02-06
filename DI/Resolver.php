@@ -30,7 +30,7 @@ class Resolver
         return call_user_func_array($info->getClosure(), $parameters);
     }
 
-    public function class($class, array $dependencies = [])
+    public function byClass($class, array $dependencies = [])
     {
         $this->dependencies = $dependencies;
 

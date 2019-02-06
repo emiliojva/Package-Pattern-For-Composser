@@ -1,7 +1,7 @@
 {
     "name": "emiliojva/package-patterns",
     "version": "0.0.1",
-    "description": "Conjunto de Pacotes com abstrações ensinadas nos Cursos da SON",
+    "description": "Conjunto de Pacotes com abstrações ensinadas nos Cursos da SON - PARA PHP 5.*",
     "homepage": "http://emilio.familiavieira.com",
     "authors": [
         {
@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "illuminate/support": "v5.5.44"
+        "php": ">=5.0",
+        "illuminate/support": "v5.4.36"
     }
 }
