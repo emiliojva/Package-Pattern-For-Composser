@@ -22,9 +22,8 @@ class App
 
     public function __construct()
     {
-        $path = $_SERVER['PATH_INFO'] ?? '/';
+        $path = $this->getUri();
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-
         $this->router = new Router($path, $method);
     }
 
@@ -52,7 +51,7 @@ class App
 
         // Resolve um metodo, e seus parametros.
         $resolver = new Resolver;
-        
+
         // Executando Controller por chamadas de string no padrao: SomeController@action
         if (is_string($method)) {
 
@@ -61,7 +60,6 @@ class App
 
             // Retorna um Controller e Action validos.
             $resultControllerAction = $this->checkControllerAction($method);
-
 
 
             // Se o array retornado estiver preenchido com o controller e action, executos
@@ -74,14 +72,13 @@ class App
 
 
             } else {
-                throw new \Exception('Voce passou um Controller/action invalido:'. $resultControllerAction['controller']. '@' .$resultControllerAction['action'].'Insira uma string com o seguinte padrao: HomeController@index');
+                throw new \Exception('Voce passou um Controller/action invalido:' . $resultControllerAction['controller'] . '@' . $resultControllerAction['action'] . 'Insira uma string com o seguinte padrao: HomeController@index');
             }
 
 
         } else {
 
             if (is_callable($method)) {
-                var_dump($method);
                 $data = $resolver->method($method, ['params' => $params]);
             }
 
@@ -112,5 +109,33 @@ class App
         }
 
 
+    }
+
+    protected function getUri()
+    {
+
+//        $path = $_SERVER['PATH_INFO'] ?? '/';
+
+        $path = "";
+
+
+        if (!empty($_SERVER['REQUEST_URI'])) {
+            $path = urldecode($_SERVER['REQUEST_URI']);
+        }
+        if (!empty($_SERVER['PATH_INFO'])) {
+            $path = $_SERVER['PATH_INFO'];
+        } else if (!empty($_SERVER['REDIRECT_URL'])) {
+            $path = $_SERVER['REDIRECT_URL'];
+        } else {
+            $path = "/";
+        }
+
+
+//        var_dump($path);
+//        die;
+
+//        var_dump($_SERVER);
+
+        return parse_url($path, PHP_URL_PATH);
     }
 }
