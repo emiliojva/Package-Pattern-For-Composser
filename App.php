@@ -23,7 +23,7 @@ class App
     public function __construct()
     {
         $path = $this->getUri();
-        $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $method = !empty($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
         $this->router = new Router($path, $method);
     }
 
@@ -66,7 +66,7 @@ class App
             if ($resultControllerAction['controller'] && $resultControllerAction['action']) {
 
 
-                $classResolved = $resolver->class($resultControllerAction['controller']);
+                $classResolved = $resolver->byClass($resultControllerAction['controller']);
 
                 $data = call_user_func_array(array($classResolved, $resultControllerAction['action']), $params); // chamada dinamica de metodo
 
