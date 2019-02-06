@@ -12,8 +12,12 @@ class RouterCollection
      * abstract,final antes da visibilidade. Ex: abstract public method(){}
      * static depois da visibilidade. Ex: public static method(){}
      */
-    public function add(string $method, string $path, $callback)
+    public function add($method, $path, $callback)
     {
+        if(!is_string($method) || !is_string($path)){
+            throw new \Exception("\$method e \$path precisam ser do tipo string");
+        }
+
         if (!isset($this->collection[$method])) { // espaço entre as chaves e metodos
             $this->collection[$method] = new Collection;
         }

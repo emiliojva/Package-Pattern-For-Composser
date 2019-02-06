@@ -32,13 +32,20 @@ class App
         $this->renderer = $renderer;
     }
 
-    public function get(string $path, $fn)
+    public function get($path, $fn)
     {
-        $this->router->get($path, $fn);
+        if(is_string($path)){
+            $this->router->get($path, $fn);
+        }
+
     }
 
-    public function post(string $path, $fn)
+    public function post($path, $fn)
     {
+        if(!is_string($path)){
+            throw new \Exception("\$path precisa ser do tipo string");
+        }
+
         $this->router->post($path, $fn);
     }
 
