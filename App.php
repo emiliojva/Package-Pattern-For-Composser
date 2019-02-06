@@ -25,9 +25,16 @@ class App
         $path = $this->getUri();
         $method = !empty($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 
-        $path= preg_replace('/^(\/public)/','',$path);
+//        $path= preg_replace('/^(\/public)/','',$path);
+//        var_dump($_SERVER,$path);
 
         $this->router = new Router($path, $method);
+    }
+
+
+    private function getBaseUrl(){
+        $startUrl = strlen( $_SERVER["DOCUMENT_ROOT"] );
+        return  substr( $_SERVER["SCRIPT_FILENAME"], $startUrl, -9 );
     }
 
     public function setRender(PHPRendererInterface $renderer)
@@ -128,12 +135,7 @@ class App
 
     protected function getUri()
     {
-
-//        $path = $_SERVER['PATH_INFO'] ?? '/';
-
         $path = "";
-
-
         if (!empty($_SERVER['REQUEST_URI'])) {
             $path = urldecode($_SERVER['REQUEST_URI']);
         }
@@ -145,12 +147,16 @@ class App
             $path = "/";
         }
 
+        $parse = parse_url($path, PHP_URL_PATH);
 
-//        var_dump($path);
-//        die;
+        $uri = str_replace($this->getBaseUrl(),'',$parse);
 
-//        var_dump($_SERVER);
+        if(!preg_match('/^\//',$uri,$variables)){
 
-        return parse_url($path, PHP_URL_PATH);
+            $uri = '/'. $uri;
+        }
+
+        return $uri;
+
     }
 }
