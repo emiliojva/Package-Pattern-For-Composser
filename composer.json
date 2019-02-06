@@ -1,8 +1,10 @@
 {
     "name": "emiliojva/package-patterns",
-    "version": "0.0.1",
-    "description": "Conjunto de Pacotes com abstrações ensinadas nos Cursos da SON",
-    "homepage": "http://emilio.familiavieira.com",
+    "type": "library",
+    "keywords": ["inovuerj","lib"],
+    "homepage": "https://github.com/emiliojva/Package-Pattern-For-Composser",
+    "license": "MIT",
+    "description": "Conjunto de Pacotes com abstrações ensinadas nos Cursos da SON - PARA PHP 7.*",
     "authors": [
         {
             "name": "Emilio Vieira",
@@ -11,6 +13,6 @@
     ],
     "require": {
         "php": ">=7.0",
-        "illuminate/support": "v5.5.44"
+        "illuminate/support": "v5.4.36"
     }
 }
