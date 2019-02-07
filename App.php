@@ -23,8 +23,18 @@ class App
     public function __construct()
     {
         $path = $this->getUri();
-        $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $method = !empty($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+
+//        $path= preg_replace('/^(\/public)/','',$path);
+//        var_dump($_SERVER,$path);
+
         $this->router = new Router($path, $method);
+    }
+
+
+    private function getBaseUrl(){
+        $startUrl = strlen( $_SERVER["DOCUMENT_ROOT"] );
+        return  substr( $_SERVER["SCRIPT_FILENAME"], $startUrl, -9 );
     }
 
     public function setRender(PHPRendererInterface $renderer)
@@ -32,22 +42,34 @@ class App
         $this->renderer = $renderer;
     }
 
-    public function get(string $path, $fn)
+    public function get($path, $fn)
     {
-        $this->router->get($path, $fn);
+        if(is_string($path)){
+            $this->router->get($path, $fn);
+        }
+
     }
 
-    public function post(string $path, $fn)
+    public function post($path, $fn)
     {
+        if(!is_string($path)){
+            throw new \Exception("\$path precisa ser do tipo string");
+        }
+
         $this->router->post($path, $fn);
     }
 
     public function run()
     {
         $route = $this->router->run(); // retorna um array com uma closure(function) da rota e seus parametros
+
+
         $method = $route['callback']; // closure
         $params = $route['params']; // params da closure
         $data = null;
+
+
+
 
         // Resolve um metodo, e seus parametros.
         $resolver = new Resolver;
@@ -66,7 +88,7 @@ class App
             if ($resultControllerAction['controller'] && $resultControllerAction['action']) {
 
 
-                $classResolved = $resolver->class($resultControllerAction['controller']);
+                $classResolved = $resolver->byClass($resultControllerAction['controller']);
 
                 $data = call_user_func_array(array($classResolved, $resultControllerAction['action']), $params); // chamada dinamica de metodo
 
@@ -113,12 +135,7 @@ class App
 
     protected function getUri()
     {
-
-//        $path = $_SERVER['PATH_INFO'] ?? '/';
-
         $path = "";
-
-
         if (!empty($_SERVER['REQUEST_URI'])) {
             $path = urldecode($_SERVER['REQUEST_URI']);
         }
@@ -131,11 +148,17 @@ class App
         }
 
 
-//        var_dump($path);
-//        die;
 
-//        var_dump($_SERVER);
+        $parse = parse_url($path, PHP_URL_PATH);
 
-        return parse_url($path, PHP_URL_PATH);
+        $uri = str_replace($this->getBaseUrl(),'',$parse);
+
+        if(!preg_match('/^\//',$uri,$variables)){
+
+            $uri = '/'. $uri;
+        }
+
+        return $uri;
+
     }
 }
