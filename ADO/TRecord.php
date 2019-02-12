@@ -21,16 +21,15 @@ abstract class TRecord
     {
         if ($id) // se o ID for informado
         {
-
-
             // carrega o objeto correspondente
             $object = $this->load($id);
 
-
             if ($object) {
 
-
                 $this->fromArray($object->toArray());
+
+//                $this->showEmptyColumnsValues();
+
             }
         }
     }
@@ -54,7 +53,6 @@ abstract class TRecord
         $sql->addColumn('*');
 
 
-
         // cria critrio de seleo baseado no ID
         $criteria = new TCriteria();
         $criteria->add(new TFilter('id', '=', $id));
@@ -63,18 +61,24 @@ abstract class TRecord
         // inicia transao
         if ($conn = TTransaction::get()) {
 
-
-
-
             // cria mensagem de log e executa a consulta
             TTransaction::log($sql->getInstruction());
             $result = $conn->Query($sql->getInstruction());
 
             // se retornou algum dado
             if ($result) {
+//                echo $sql->getInstruction();
+
                 // retorna os dados em forma de objeto
                 $object = $result->fetchObject(get_class($this));
+
+
+
+
+
+
             }
+
             return $object;
         } else {
             // se no tiver transao, retorna uma exceo
@@ -104,6 +108,9 @@ abstract class TRecord
     public function fromArray($data)
     {
         $this->data = $data;
+
+
+
     }
 
     /*
@@ -113,6 +120,8 @@ abstract class TRecord
 
     public function toArray()
     {
+
+
         return $this->data;
     }
 
@@ -413,7 +422,6 @@ abstract class TRecord
      * @param array $collection
      * @return array
      *
-
      *
      *
      */
@@ -495,15 +503,17 @@ abstract class TRecord
      */
     public function getOne()
     {
+        if (!empty($this->data['id'])) {
+            return $this;
+        }
 
-
-        if (count($this->toArray())) {
+        if (count($this->data)) {
 
             $results = array();
 
             $criterio = new TCriteria();
 
-            foreach ($this->toArray() as $prop => $value) {
+            foreach ($this->data as $prop => $value) {
 
                 $criterio->add(new TFilter($prop, '=', $value));
 
@@ -515,7 +525,36 @@ abstract class TRecord
 
         }
 
+        throw new \Exception('O metodo getOne, precisa que um campo chave seja preenchido');
 
+
+    }
+
+    public function getColumns()
+    {
+
+        $conn = TTransaction::get();
+
+        $q = $conn->prepare("DESCRIBE {$this->getEntity()}");
+        $q->execute();
+        return $q->fetchAll(\PDO::FETCH_COLUMN);
+
+    }
+
+
+    /**
+     * Retorna Objeto da Entity, com valores das propriedades vazios, inclusive
+     * @return $this
+     */
+    public function showEmptyColumnsValues(){
+        // preenchendo propriedades que nao retornaram do banco, sendo NULL
+        foreach ($this->getColumns() as $column) {
+            if (empty($this->data[$column])) {
+                $this->data[$column] = null;
+            }
+        }
+
+        return $this;
     }
 
 }

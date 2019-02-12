@@ -26,7 +26,7 @@ class App
         $method = !empty($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 
 //        $path= preg_replace('/^(\/public)/','',$path);
-//        var_dump($_SERVER,$path);
+
 
         $this->router = new Router($path, $method);
     }
@@ -138,6 +138,7 @@ class App
         $path = "";
         if (!empty($_SERVER['REQUEST_URI'])) {
             $path = urldecode($_SERVER['REQUEST_URI']);
+
         }
         if (!empty($_SERVER['PATH_INFO'])) {
             $path = $_SERVER['PATH_INFO'];
@@ -147,9 +148,12 @@ class App
             $path = "/";
         }
 
-        $parse = parse_url($path, PHP_URL_PATH);
+        $uri = str_replace($this->getBaseUrl(),'',$path);
 
-        $uri = str_replace($this->getBaseUrl(),'',$parse);
+
+//        $parse = parse_url($path, PHP_URL_PATH);
+//        var_dump($uri);
+//        die;
 
         if(!preg_match('/^\//',$uri,$variables)){
 

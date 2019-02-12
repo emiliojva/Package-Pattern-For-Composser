@@ -18,9 +18,13 @@ class Router
             throw new \Exception("\$path precisa ser do tipo string");
         }
 
+
+
         $this->collection = new RouterCollection; // mesno nivel de diretorio nao precisa instaciar classe
         $this->path = $path;
         $this->method = $method;
+
+//
 
     }
 
@@ -50,6 +54,9 @@ class Router
 
         // iterando cada PATH para localizar padrao de rota solicitado
         foreach ($data as $key => $value) {
+
+
+
 //            key - 'url pattern da collection';
             $result = $this->checkUrl($key, $this->path); // retorna params
 
