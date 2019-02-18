@@ -20,32 +20,14 @@ abstract class Action
     private $layout_name;
     private $layout_url;
 
+    private $pathTemplate;
+
     public function __construct()
     {
         $this->view = new \stdClass();
+
+        $this->init();
     }
-
-    public function getLayoutUrl()
-    {
-        $this->layout_url = "../App/Views/Layouts/{$this->getLayout()}.phtml";
-
-        return $this->layout_url;
-    }
-
-    public function setLayout($layout_name)
-    {
-        $this->layout_name = $layout_name;
-    }
-
-    public function getLayout()
-    {
-
-        if (is_null($this->layout_name)) {
-            $this->layout_name = 'default';
-        }
-        return $this->layout_name;
-    }
-
 
     // Renderiza conteudo para com layout ou sem.
     public function render($action, $layout = true, $parser_layout = true)
@@ -101,7 +83,101 @@ abstract class Action
         $this->urlAction = $urlAction;
     }
 
-    public function includeToVar($file)
+
+    public function getPathTemplate() {
+        return $this->pathTemplate;
+    }
+    public function setLayout($layout_name)
+    {
+        $this->layout_name = $layout_name;
+    }
+    public function getLayout()
+    {
+
+        if (is_null($this->layout_name)) {
+            $this->layout_name = 'default';
+        }
+
+        return $this->layout_name;
+    }
+    public function getLayoutUrl()
+    {
+//        $this->layout_url = "../App/Views/Layouts/{$this->getLayout()}.phtml";
+
+        $this->layout_url = getcwd() . "/templates/{$this->getLayout()}/index.phtml";
+        return $this->layout_url;
+    }
+
+
+
+    public function getTemplateDir()
+    {
+//        $this->layout_url = "../App/Views/Layouts/{$this->getLayout()}.phtml";
+
+        $path = getcwd() . "/templates/{$this->getLayout()}/";
+
+        return $path;
+    }
+
+    public function getDirBase()
+    {
+//        $this->layout_url = "../App/Views/Layouts/{$this->getLayout()}.phtml";
+
+        $path = getcwd();
+
+        return $path;
+    }
+
+
+
+
+
+
+    protected $root_directory;
+    protected $url_base;
+    protected $url_template;
+
+    public function getBaseUrl(){
+
+        // removendo barra no final
+        return $this->url_base;
+    }
+    public function getTemplateUrl(){
+
+        return $this->getBaseUrl() . "/templates/{$this->getLayout()}/";
+    }
+
+    private function init(){
+
+        $this->root_directory = $_SERVER['DOCUMENT_ROOT'] . "{$this->getBaseURI()}";
+
+        if (file_exists($this->root_directory)) {
+
+            $this->url_base = "http://{$_SERVER['HTTP_HOST']}{$this->getBaseURI()}";
+
+            $this->url_template = $this->getTemplateUrl();
+
+            /*CONTANTES DE CAMINHOS ABSOLUTOS*/
+//            define('CAMINHO_ROOT_DIR', $this->root_directory); // Retorna exemplo : /var/www/sites/inovuerj/
+
+//            define('CAMINHO_ROOT', $this->root_directory); // Retorna exemplo : http://127.0.0.1:8000/
+
+//            define('CAMINHO_ADMIN', CAMINHO_MAINE . "admin/");
+        }
+
+    }
+    private function getBaseURI()
+    {
+        $startUrl = strlen($_SERVER["DOCUMENT_ROOT"]);
+
+        // removendo barra no final : preg_replace("/\/$/",'',$aux);
+
+        // pegando apenas uri
+        return substr($_SERVER["SCRIPT_FILENAME"], $startUrl, -9);
+
+
+    }
+    private function includeToVar($file)
     {
 
         if (file_exists($file)) {

@@ -228,4 +228,8 @@ final class Util
 
         return false;
     }
+
+    public static function isAjaxRequest() {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+    }
 }
