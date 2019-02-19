@@ -42,7 +42,7 @@ abstract class TRecord
      *
      * @param $id
      * @return TRecord
-     * @throws Exception
+     * @throws \Exception
      */
     public function load($id)
     {
@@ -82,7 +82,7 @@ abstract class TRecord
             return $object;
         } else {
             // se no tiver transao, retorna uma exceo
-            throw new Exception('No h transao ativa !!');
+            throw new \Exception('No h transao ativa !!');
         }
     }
 
@@ -289,7 +289,7 @@ abstract class TRecord
             return $result;
         } else {
             // se no tiver transao, retorna uma exceo
-            throw new Exception('No h transao ativa !!');
+            throw new \Exception('No h transao ativa !!');
         }
     }
 
@@ -402,7 +402,7 @@ abstract class TRecord
                 }
 
             } else {
-                throw new Exception('Parametro não é uma STRING|ARRAY');
+                throw new \Exception('Parametro não é uma STRING|ARRAY');
             }
         });
 
@@ -465,7 +465,7 @@ abstract class TRecord
                 }
 
             } else {
-                throw new Exception('Parametro não é uma STRING|ARRAY');
+                throw new \Exception('Parametro não é uma STRING|ARRAY');
             }
         });
 
