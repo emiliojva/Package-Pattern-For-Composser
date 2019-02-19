@@ -58,7 +58,7 @@ abstract class Action
     }
 
     // Pega o conteudo da view pelo nome do Controller. Retorna ou inclui conforme atributo $this->parseToVar
-    protected function content()
+    public function content()
     {
         $current = get_class($this);
         // limpando namespace e deixando a classe somente
@@ -149,11 +149,15 @@ abstract class Action
 
     private function init(){
 
-        $this->root_directory = $_SERVER['DOCUMENT_ROOT'] . "{$this->getBaseURI()}";
+        $pathAux = str_replace('/public/','',$this->getBaseURI());
+
+        $this->root_directory = $_SERVER['DOCUMENT_ROOT'] . "{$pathAux}";
 
         if (file_exists($this->root_directory)) {
 
-            $this->url_base = "http://{$_SERVER['HTTP_HOST']}{$this->getBaseURI()}";
+            $this->url_base = "http://{$_SERVER['HTTP_HOST']}/{$pathAux}";
+
+            $this->url_base = preg_replace('/\/$/','',$this->url_base).'/';
 
             $this->url_template = $this->getTemplateUrl();
 
@@ -169,8 +173,9 @@ abstract class Action
     private function getBaseURI()
     {
         $startUrl = strlen($_SERVER["DOCUMENT_ROOT"]);
-
         // removendo barra no final : preg_replace("/\/$/",'',$aux);
+
+
 
         // pegando apenas uri
         return substr($_SERVER["SCRIPT_FILENAME"], $startUrl, -9);
