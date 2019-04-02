@@ -8,9 +8,13 @@
 
 namespace Inovuerj\ADO;
 
+use Inovuerj\Helper\Util;
+
 abstract class TRecord
 {
     protected $data;  // array contendo os dados do objeto
+
+    protected $validations = [];
 
     /* mtodo __construct()
      *  instancia um Active Record
@@ -23,15 +27,12 @@ abstract class TRecord
         {
             // carrega o objeto correspondente
             $object = $this->load($id);
-
             if ($object) {
-
                 $this->fromArray($object->toArray());
-
-//                $this->showEmptyColumnsValues();
-
             }
         }
+
+//        $this->showEmptyColumnsValues();
     }
 
     /**
@@ -71,11 +72,6 @@ abstract class TRecord
 
                 // retorna os dados em forma de objeto
                 $object = $result->fetchObject(get_class($this));
-
-
-
-
-
 
             }
 
@@ -167,13 +163,65 @@ abstract class TRecord
         if (method_exists($this, $metodo)) {
             call_user_func(array($this, $metodo), $value);
         } else {
-            if ($value == NULL) {
+            if ($value === NULL) {
                 unset($this->data[$prop]);
             } else {
                 $this->data[$prop] = $value;
             }
         }
     }
+
+
+    /**
+     * Filtra caracteres e tipos
+     * @param array $arrayInputs
+     * @return array
+     */
+    public function filtrarCampos()
+    {
+        $array_filter = array();
+
+        foreach ($this->validations as $propriedade => $tipo) {
+
+            if($this->data[$propriedade]===NULL){
+                throw new \Exception('O valor nao pode ser Nulo');
+            }
+
+            // valor do input
+            $value = $this->data[$propriedade];
+
+            $valueTypeOf = gettype($value);
+
+            // anti-hacker
+            $value = trim($value); # Limpar espacos
+            $value = stripslashes($value); # remove barras invertidas
+            $value = htmlspecialchars($value); # converte caracteres especiais para realidade HTML -> <a href='test'>Test</a> -> &lt;a href=&#039;test&#039;&gt;Test&lt;/a&gt;
+
+            // valor do tipo, usando como metodo existente da classe Sanitize
+            $method = $tipo;
+
+            $validator = call_user_func(array('Inovuerj\ADO\TValidator', $method), $value);
+
+            // se nao passar no Validator, retorno erro
+            if (!$validator && $method != 'texto') {
+                $msg = "O campo {$propriedade} nao foi validado";
+                throw new \Exception($msg);
+            } else {
+                // injetando valor no $this->$propriedade
+                $this->{$propriedade} = call_user_func(array('Inovuerj\ADO\TSanitizer', $method), $value);
+            }
+
+//            Util::mostrar($propriedade .' - Tipo: '.$tipo, __LINE__);
+//            Util::mostrar($this->{$propriedade},__LINE__);
+
+        }
+
+
+        # filtrado
+        return $this;
+
+    }
+
 
     /*
      * mtodo load()
@@ -184,6 +232,8 @@ abstract class TRecord
 
     public function store()
     {
+        $this->filtrarCampos();
+
         // verifica se tem ID ou se existe na base de dados
         if (empty($this->data['id']) or (!$this->load($this->id))) {
             // incrementa o ID
@@ -538,7 +588,7 @@ abstract class TRecord
         $q = $conn->prepare("DESCRIBE {$this->getEntity()}");
         $q->execute();
         return $q->fetchAll(\PDO::FETCH_COLUMN);
-
+        
     }
 
 
