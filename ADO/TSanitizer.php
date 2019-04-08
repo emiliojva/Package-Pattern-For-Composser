@@ -8,8 +8,6 @@
 
 namespace Inovuerj\ADO;
 
-use Inovuerj\Helper\Util;
-
 class TSanitizer
 {
 
@@ -19,7 +17,7 @@ class TSanitizer
     public static function varchar($valor)
     {
         $valor = str_replace(array('"', "'", '`', '´', '¨'), '', trim($valor));
-        return preg_match("/^(.*)$/", $valor, $matches);
+        return $valor;
 
     }
 
@@ -46,7 +44,9 @@ class TSanitizer
     public static function filename($valor)
     {
         $valor = str_replace(array('"', "'", '`', '´', '¨'), '', trim($valor));
-        return preg_match("/^[^.][A-z0-9\-\_\.]+[^.]$/", $valor, $matches);
+
+        $valor = filter_var($valor, FILTER_SANITIZE_STRING);
+        return $valor;
 
     }
 

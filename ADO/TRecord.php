@@ -106,7 +106,6 @@ abstract class TRecord
         $this->data = $data;
 
 
-
     }
 
     /*
@@ -183,7 +182,7 @@ abstract class TRecord
 
         foreach ($this->validations as $propriedade => $tipo) {
 
-            if($this->data[$propriedade]===NULL){
+            if ($this->data[$propriedade] === NULL) {
                 throw new \Exception('O valor nao pode ser Nulo');
             }
 
@@ -421,8 +420,8 @@ abstract class TRecord
 
             # Caso o parametro for string
             if (is_string($fields)) {
-                $al = Utilidades::removeAcentos(strtolower($a[$fields]));
-                $bl = Utilidades::removeAcentos(strtolower($b[$fields]));
+                $al = Util::removeAcentos(strtolower($a[$fields]));
+                $bl = Util::removeAcentos(strtolower($b[$fields]));
 
                 # Não altera posição
                 if ($al == $bl) {
@@ -440,8 +439,8 @@ abstract class TRecord
                     $field_a = (string)$a[$field];
                     $field_b = (string)$b[$field];
 
-                    $al = Utilidades::removeAcentos(strtolower($field_a));
-                    $bl = Utilidades::removeAcentos(strtolower($field_b));
+                    $al = Util::removeAcentos(strtolower($field_a));
+                    $bl = Util::removeAcentos(strtolower($field_b));
 
                     if ($al == $bl) {
                         continue;
@@ -484,8 +483,8 @@ abstract class TRecord
 
             # Caso o parametro for string
             if (is_string($fields)) {
-                $al = Utilidades::removeAcentos(strtolower($a->$fields));
-                $bl = Utilidades::removeAcentos(strtolower($b->$fields));
+                $al = Util::removeAcentos(strtolower($a->$fields));
+                $bl = Util::removeAcentos(strtolower($b->$fields));
 
                 # Não altera posição
                 if ($al == $bl) {
@@ -503,8 +502,8 @@ abstract class TRecord
                     $field_a = (string)$a->$field;
                     $field_b = (string)$b->$field;
 
-                    $al = Utilidades::removeAcentos(strtolower($field_a));
-                    $bl = Utilidades::removeAcentos(strtolower($field_b));
+                    $al = Util::removeAcentos(strtolower($field_a));
+                    $bl = Util::removeAcentos(strtolower($field_b));
 
                     if ($al == $bl) {
                         continue;
@@ -530,10 +529,7 @@ abstract class TRecord
         foreach ($this->toArray() as $prop => $value) {
 
             if (mb_detect_encoding($value) == 'UTF-8') {
-
-//                Utilidades::mostrar($prop . '-'. $value . '  '.mb_detect_encoding($value));
                 $results[$prop] = utf8_encode($value);
-
             } else {
                 $results[$prop] = $value;
             }
@@ -553,6 +549,7 @@ abstract class TRecord
      */
     public function getOne()
     {
+        // se houver id retorna o objeto
         if (!empty($this->data['id'])) {
             return $this;
         }
@@ -588,7 +585,7 @@ abstract class TRecord
         $q = $conn->prepare("DESCRIBE {$this->getEntity()}");
         $q->execute();
         return $q->fetchAll(\PDO::FETCH_COLUMN);
-        
+
     }
 
 
@@ -596,7 +593,8 @@ abstract class TRecord
      * Retorna Objeto da Entity, com valores das propriedades vazios, inclusive
      * @return $this
      */
-    public function showEmptyColumnsValues(){
+    public function showEmptyColumnsValues()
+    {
         // preenchendo propriedades que nao retornaram do banco, sendo NULL
         foreach ($this->getColumns() as $column) {
             if (empty($this->data[$column])) {

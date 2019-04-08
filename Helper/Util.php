@@ -6,7 +6,7 @@
  */
 
 /*
-Fun??es P?blicas
+Funcoes Publicas
 
 troca_titulo($titulo);
 Troca o t?tulo da p?gina pela vari?vel passada.
@@ -198,19 +198,20 @@ final class Util
     public static function removeAcentos($string)
     {
 
-        $string = preg_replace("/[?????]/", "a", $string);
-        $string = preg_replace("/[?????]/", "A", $string);
-        $string = preg_replace("/[???]/", "e", $string);
-        $string = preg_replace("/[???]/", "E", $string);
-        $string = preg_replace("/[??]/", "i", $string);
-        $string = preg_replace("/[??]/", "I", $string);
-        $string = preg_replace("/[?????]/", "o", $string);
-        $string = preg_replace("/[?????]/", "O", $string);
-        $string = preg_replace("/[???]/", "u", $string);
-        $string = preg_replace("/[???]/", "U", $string);
-        $string = preg_replace("/?/", "c", $string);
-        $string = preg_replace("/?/", "C", $string);
-
+        $string = preg_replace("/[áàâãä]/", "a", $string);
+        $string = preg_replace("/[ÁÀÂÃÄ]/", "A", $string);
+        $string = preg_replace("/[éèê]/", "e", $string);
+        $string = preg_replace("/[ÉÈÊ]/", "E", $string);
+        $string = preg_replace("/[íì]/", "i", $string);
+        $string = preg_replace("/[ÍÌ]/", "I", $string);
+        $string = preg_replace("/[óòôõö]/", "o", $string);
+        $string = preg_replace("/[ÓÒÔÕÖ]/", "O", $string);
+        $string = preg_replace("/[úùü]/", "u", $string);
+        $string = preg_replace("/[ÚÙÜ]/", "U", $string);
+        $string = preg_replace("/ç/", "c", $string);
+        $string = preg_replace("/Ç/", "C", $string);
+//        $string = preg_replace("/[][><}{)(:;,!?*%~^`@]/", "", $string);
+//        $string = preg_replace("/ /", "_", $string);
         return $string;
     }
 

@@ -128,19 +128,14 @@ abstract class Action
         return $path;
     }
 
-
-
-
-
-
     protected $root_directory;
-    protected $url_base;
+    protected static $url_base;
     protected $url_template;
 
-    public function getBaseUrl(){
+    public static function getBaseUrl(){
 
         // removendo barra no final
-        return $this->url_base;
+        return self::$url_base;
     }
     public function getTemplateUrl(){
 
@@ -155,9 +150,9 @@ abstract class Action
 
         if (file_exists($this->root_directory)) {
 
-            $this->url_base = "http://{$_SERVER['HTTP_HOST']}/{$pathAux}";
+            self::$url_base = "http://{$_SERVER['HTTP_HOST']}/{$pathAux}";
 
-            $this->url_base = preg_replace('/\/$/','',$this->url_base).'/';
+            self::$url_base = preg_replace('/\/$/','',self::$url_base).'/';
 
             $this->url_template = $this->getTemplateUrl();
 
