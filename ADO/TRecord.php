@@ -560,6 +560,7 @@ abstract class TRecord
 
             $criterio = new TCriteria();
 
+
             foreach ($this->data as $prop => $value) {
 
                 $criterio->add(new TFilter($prop, '=', $value));
