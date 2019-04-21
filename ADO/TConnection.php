@@ -54,7 +54,13 @@ final class TConnection
                     $conn = new \PDO("pgsql:dbname={$name};user={$user}; password={$pass};host=$host");
                     break;
                 case 'mysql':
-                    $conn = new \PDO("mysql:host={$host};port=3306;dbname={$name};charset=UTF8", $user, $pass);
+                    $conn = new \PDO("mysql:host={$host};port=3306;dbname={$name};charset=utf8mb4", $user, $pass);
+                    // define para que o PDO lance excees na ocorrncia de erros
+                    $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+                    $conn->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES 'utf8'");
+                    $conn->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, 'SET character_set_connection=utf8');
+                    $conn->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, 'SET character_set_client=utf8');
+                    $conn->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, 'SET character_set_results=utf8');
                     break;
                 case 'sqlite':
                     $conn = new \PDO("sqlite:{$name}");
@@ -72,15 +78,6 @@ final class TConnection
                     throw new \Exception('Erro de Conex�o');
                     break;
             };
-
-            // define para que o PDO lance excees na ocorrncia de erros
-            $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-            $conn->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES 'utf8'");
-            $conn->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, 'SET character_set_connection=utf8');
-            $conn->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, 'SET character_set_client=utf8');
-            $conn->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, 'SET character_set_results=utf8');
-
 
             // retorna o objeto instanciado.
             return $conn;

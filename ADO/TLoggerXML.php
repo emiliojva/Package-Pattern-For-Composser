@@ -9,7 +9,6 @@ namespace Inovuerj\ADO;
 class TLoggerXML extends TLogger
 {
     /*
-     * m�todo write()
      *  escreve uma mensagem no arquivo de LOG
      * @param  $message = mensagem a ser escrita
      */
@@ -22,9 +21,8 @@ class TLoggerXML extends TLogger
         $text.= "   <message>$message</message>\n";
         $text.= "</log>\n";
         // adiciona ao final do arquivo
-        $handler = fopen($this->filename, 'a');
+        $handler = fopen("{$this->filename}.xml", 'a');
         fwrite($handler, $text);
         fclose($handler);
     }
 }
-?>

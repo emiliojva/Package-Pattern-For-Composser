@@ -9,6 +9,7 @@
 namespace Inovuerj;
 
 use Inovuerj\DI\Resolver;
+use Inovuerj\Helper\Util;
 use Inovuerj\Renderer\PHPRendererInterface;
 use Inovuerj\Router\Router;
 
@@ -20,21 +21,41 @@ class App
      */
     private $renderer;
 
+    /**
+     * @global $REQUEST ActionRequest
+     */
+    private static $REQUEST;
+
     public function __construct()
     {
         $path = $this->getUri();
+
         $method = !empty($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
-
 //        $path= preg_replace('/^(\/public)/','',$path);
-
-
         $this->router = new Router($path, $method);
+
+
+    }
+
+    /**
+     * Retorna uma requisicao com tratamento inicial de get/post/request
+     * @return ActionRequest
+     */
+    public static function request()
+    {
+
+        if (self::$REQUEST == null) {
+            self::$REQUEST = new ActionRequest();
+        }
+
+        return self::$REQUEST;
     }
 
 
-    private function getBaseUrl(){
-        $startUrl = strlen( $_SERVER["DOCUMENT_ROOT"] );
-        return  substr( $_SERVER["SCRIPT_FILENAME"], $startUrl, -9 );
+    private function getBaseUrl()
+    {
+        $startUrl = strlen($_SERVER["DOCUMENT_ROOT"]);
+        return substr($_SERVER["SCRIPT_FILENAME"], $startUrl, -9);
     }
 
     public function setRender(PHPRendererInterface $renderer)
@@ -44,7 +65,7 @@ class App
 
     public function get($path, $fn)
     {
-        if(is_string($path)){
+        if (is_string($path)) {
             $this->router->get($path, $fn);
         }
 
@@ -52,7 +73,7 @@ class App
 
     public function post($path, $fn)
     {
-        if(!is_string($path)){
+        if (!is_string($path)) {
             throw new \Exception("\$path precisa ser do tipo string");
         }
 
@@ -67,8 +88,6 @@ class App
         $method = $route['callback']; // closure
         $params = $route['params']; // params da closure
         $data = null;
-
-
 
 
         // Resolve um metodo, e seus parametros.
@@ -148,19 +167,42 @@ class App
             $path = "/";
         }
 
-        $uri = str_replace($this->getBaseUrl(),'',$path);
+        $uri = str_replace($this->getBaseUrl(), '', $path);
 
 
 //        $parse = parse_url($path, PHP_URL_PATH);
 //        var_dump($uri);
 //        die;
 
-        if(!preg_match('/^\//',$uri,$variables)){
+        if (!preg_match('/^\//', $uri, $variables)) {
 
-            $uri = '/'. $uri;
+            $uri = '/' . $uri;
         }
 
         return $uri;
 
     }
+
+
+}
+
+class ActionRequest
+{
+    public $GET = FALSE;
+    public $POST = FALSE;
+    public $REQUEST = FALSE;
+
+    public function __construct()
+    {
+        $method_request = $_SERVER['REQUEST_METHOD']; // tipo de requisicao
+        $request_filter_result = filter_input_array(constant('INPUT_' . $method_request), FILTER_DEFAULT);
+
+        if (!is_null($request_filter_result)) {
+            $this->{$method_request} = $request_filter_result;
+        } else {
+            $this->{$method_request} = [];
+        }
+
+    }
+
 }

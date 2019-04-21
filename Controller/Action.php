@@ -27,6 +27,7 @@ abstract class Action
         $this->view = new \stdClass();
 
         $this->init();
+
     }
 
     // Renderiza conteudo para com layout ou sem.
@@ -75,6 +76,18 @@ abstract class Action
 
     }
 
+
+    /**
+     * Define uma variavel de template com seu respectivo valor
+     * @param $var
+     * @param $value
+     */
+    public function setViewVar($var, $value)
+    {
+        $this->view->{$var} = $value;
+    }
+
+
     /**
      * @param mixed $urlAction
      */
@@ -84,13 +97,16 @@ abstract class Action
     }
 
 
-    public function getPathTemplate() {
+    public function getPathTemplate()
+    {
         return $this->pathTemplate;
     }
+
     public function setLayout($layout_name)
     {
         $this->layout_name = $layout_name;
     }
+
     public function getLayout()
     {
 
@@ -100,6 +116,7 @@ abstract class Action
 
         return $this->layout_name;
     }
+
     public function getLayoutUrl()
     {
 //        $this->layout_url = "../App/Views/Layouts/{$this->getLayout()}.phtml";
@@ -107,7 +124,6 @@ abstract class Action
         $this->layout_url = getcwd() . "/templates/{$this->getLayout()}/index.phtml";
         return $this->layout_url;
     }
-
 
 
     public function getTemplateDir()
@@ -132,19 +148,23 @@ abstract class Action
     protected static $url_base;
     protected $url_template;
 
-    public static function getBaseUrl(){
+    public static function getBaseUrl()
+    {
 
         // removendo barra no final
         return self::$url_base;
     }
-    public function getTemplateUrl(){
+
+    public function getTemplateUrl()
+    {
 
         return $this->getBaseUrl() . "/templates/{$this->getLayout()}/";
     }
 
-    private function init(){
+    private function init()
+    {
 
-        $pathAux = str_replace('/public/','',$this->getBaseURI());
+        $pathAux = str_replace('/public/', '', $this->getBaseURI());
 
         $this->root_directory = $_SERVER['DOCUMENT_ROOT'] . "{$pathAux}";
 
@@ -152,7 +172,7 @@ abstract class Action
 
             self::$url_base = "http://{$_SERVER['HTTP_HOST']}/{$pathAux}";
 
-            self::$url_base = preg_replace('/\/$/','',self::$url_base).'/';
+            self::$url_base = preg_replace('/\/$/', '', self::$url_base) . '/';
 
             $this->url_template = $this->getTemplateUrl();
 
@@ -163,13 +183,12 @@ abstract class Action
 
 //            define('CAMINHO_ADMIN', CAMINHO_MAINE . "admin/");
         }
-
     }
+
     private function getBaseURI()
     {
         $startUrl = strlen($_SERVER["DOCUMENT_ROOT"]);
         // removendo barra no final : preg_replace("/\/$/",'',$aux);
-
 
 
         // pegando apenas uri
@@ -177,6 +196,7 @@ abstract class Action
 
 
     }
+
     private function includeToVar($file)
     {
 
@@ -190,4 +210,5 @@ abstract class Action
 
 
     }
+
 }

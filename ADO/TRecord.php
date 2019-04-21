@@ -23,6 +23,9 @@ abstract class TRecord
      */
     public function __construct($id = NULL)
     {
+
+
+
         if ($id) // se o ID for informado
         {
             // carrega o objeto correspondente
@@ -31,7 +34,6 @@ abstract class TRecord
                 $this->fromArray($object->toArray());
             }
         }
-
 //        $this->showEmptyColumnsValues();
     }
 
@@ -62,16 +64,22 @@ abstract class TRecord
         // inicia transao
         if ($conn = TTransaction::get()) {
 
+
+
             // cria mensagem de log e executa a consulta
             TTransaction::log($sql->getInstruction());
             $result = $conn->Query($sql->getInstruction());
 
             // se retornou algum dado
             if ($result) {
+
+
 //                echo $sql->getInstruction();
 
                 // retorna os dados em forma de objeto
                 $object = $result->fetchObject(get_class($this));
+
+
 
             }
 
@@ -233,6 +241,8 @@ abstract class TRecord
     {
         $this->filtrarCampos();
 
+
+
         // verifica se tem ID ou se existe na base de dados
         if (empty($this->data['id']) or (!$this->load($this->id))) {
             // incrementa o ID
@@ -261,14 +271,14 @@ abstract class TRecord
                     $sql->setRowData($key, $this->$key);
                 }
             }
+
+
         }
         // inicia transao
         if ($conn = TTransaction::get()) {
-
             // faz o log e executa o SQL
             TTransaction::log($sql->getInstruction());
             $result = $conn->exec($sql->getInstruction());
-
             // retorna o resultado
             return $result;
         } else {

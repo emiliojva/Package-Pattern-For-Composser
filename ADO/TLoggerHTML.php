@@ -20,9 +20,10 @@ class TLoggerHTML extends TLogger
         $text.= "   <i>$message</i> <br>\n";
         $text.= "</p>\n";
         // adiciona ao final do arquivo
-        $handler = fopen($this->filename, 'a');
+        $handler = fopen("{$this->filename}.html", 'a');
         fwrite($handler, $text);
         fclose($handler);
+
     }
 }
 ?>

@@ -18,8 +18,6 @@ class Router
             throw new \Exception("\$path precisa ser do tipo string");
         }
 
-
-
         $this->collection = new RouterCollection; // mesno nivel de diretorio nao precisa instaciar classe
         $this->path = $path;
         $this->method = $method;

@@ -10,7 +10,7 @@ abstract class TLogger
     protected $filename; // local do arquivo de LOG
     
     /*
-     * m�todo __construct()
+     * mtodo __construct()
      *  instancia um logger
      * @param  $filename = local do arquivo de LOG
      */
@@ -21,7 +21,6 @@ abstract class TLogger
         file_put_contents($filename, '');
     }
     
-    // define o m�todo write como obrigat�rio
+    // define o mtodo write como obrigatrio
     abstract function write($message);
 }
-?>
