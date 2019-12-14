@@ -197,19 +197,18 @@ final class Util
 
     public static function removeAcentos($string)
     {
-
-        $string = preg_replace("/[áàâãä]/", "a", $string);
-        $string = preg_replace("/[ÁÀÂÃÄ]/", "A", $string);
-        $string = preg_replace("/[éèê]/", "e", $string);
-        $string = preg_replace("/[ÉÈÊ]/", "E", $string);
-        $string = preg_replace("/[íì]/", "i", $string);
-        $string = preg_replace("/[ÍÌ]/", "I", $string);
-        $string = preg_replace("/[óòôõö]/", "o", $string);
-        $string = preg_replace("/[ÓÒÔÕÖ]/", "O", $string);
-        $string = preg_replace("/[úùü]/", "u", $string);
-        $string = preg_replace("/[ÚÙÜ]/", "U", $string);
-        $string = preg_replace("/ç/", "c", $string);
-        $string = preg_replace("/Ç/", "C", $string);
+        $string = preg_replace("/[áàâãä]/u", "a", $string);
+        $string = preg_replace("/[ÁÀÂÃÄ]/u", "A", $string);
+        $string = preg_replace("/[éèê]/u", "e", $string);
+        $string = preg_replace("/[ÉÈÊ]/u", "E", $string);
+        $string = preg_replace("/[íì]/u", "i", $string);
+        $string = preg_replace("/[ÍÌ]/u", "I", $string);
+        $string = preg_replace("/[óòôõö]/u", "o", $string);
+        $string = preg_replace("/[ÓÒÔÕÖ]/u", "O", $string);
+        $string = preg_replace("/[úùü]/u", "u", $string);
+        $string = preg_replace("/[ÚÙÜ]/u", "U", $string);
+        $string = preg_replace("/ç/u", "c", $string);
+        $string = preg_replace("/Ç/u", "C", $string);
 //        $string = preg_replace("/[][><}{)(:;,!?*%~^`@]/", "", $string);
 //        $string = preg_replace("/ /", "_", $string);
         return $string;

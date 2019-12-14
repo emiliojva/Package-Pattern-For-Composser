@@ -150,31 +150,39 @@ abstract class Action
 
     public static function getBaseUrl()
     {
-
         // removendo barra no final
         return self::$url_base;
     }
 
     public function getTemplateUrl()
     {
-
         return $this->getBaseUrl() . "/templates/{$this->getLayout()}/";
     }
 
     private function init()
     {
-
+        // remove o public da url
         $pathAux = str_replace('/public/', '', $this->getBaseURI());
 
+        // remove barra invertida do diretorio
+        if($pathAux==='\\'){
+            $pathAux = "";
+        }
+
+        // diretorio raiz
         $this->root_directory = $_SERVER['DOCUMENT_ROOT'] . "{$pathAux}";
 
         if (file_exists($this->root_directory)) {
 
+            // caminho url base
             self::$url_base = "http://{$_SERVER['HTTP_HOST']}/{$pathAux}";
 
+            // coloca barra se necessario
             self::$url_base = preg_replace('/\/$/', '', self::$url_base) . '/';
 
-            $this->url_template = $this->getTemplateUrl();
+
+//            echo self::$url_base;
+//            die;
 
             /*CONTANTES DE CAMINHOS ABSOLUTOS*/
 //            define('CAMINHO_ROOT_DIR', $this->root_directory); // Retorna exemplo : /var/www/sites/inovuerj/

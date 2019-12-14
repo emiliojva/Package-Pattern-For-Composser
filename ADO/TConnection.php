@@ -54,7 +54,7 @@ final class TConnection
                     $conn = new \PDO("pgsql:dbname={$name};user={$user}; password={$pass};host=$host");
                     break;
                 case 'mysql':
-                    $conn = new \PDO("mysql:host={$host};port=3306;dbname={$name};charset=utf8mb4", $user, $pass);
+                    $conn = new \PDO("mysql:host={$host};port=3306;dbname={$name};charset=utf8", $user, $pass);
                     // define para que o PDO lance excees na ocorrncia de erros
                     $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
                     $conn->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES 'utf8'");
