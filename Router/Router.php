@@ -53,8 +53,6 @@ class Router
         // iterando cada PATH para localizar padrao de rota solicitado
         foreach ($data as $key => $value) {
 
-
-
 //            key - 'url pattern da collection';
             $result = $this->checkUrl($key, $this->path); // retorna params
 

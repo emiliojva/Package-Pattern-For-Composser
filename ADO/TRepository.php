@@ -61,7 +61,7 @@ namespace Inovuerj\ADO;
             } else {
 
                 // se no tiver transao, retorna uma exceo
-                throw new Exception('No h transao ativa !!');
+                throw new \Exception('No h transao ativa !!');
             }
         }
 

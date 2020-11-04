@@ -8,8 +8,15 @@
 
 namespace Inovuerj\Renderer;
 
+use Inovuerj\CORS\CorsMiddleware;
+
 interface PHPRendererInterface
 {
-    public function setData($data);
-    public function run();
+
+  public function setCORS(CorsMiddleware $objCors);
+
+  public function setData($data);
+
+  public function run();
+  
 }
